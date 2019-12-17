@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Capstone.Data;
+using Capstone.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Capstone.Data;
-using Capstone.Models;
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Capstone.Controllers
 {
@@ -30,7 +29,7 @@ namespace Capstone.Controllers
             var users = from f in _context.Follow
                            .Include(f => f.Follower)
                            .Include(f => f.User)
-                           select f;
+                        select f;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -63,13 +62,32 @@ namespace Capstone.Controllers
         }
 
         // GET: Follows/Create
-        public async Task<IActionResult> CreateAsync()
+        //public async Task<IActionResult> CreateAsync()
+        //{
+        //    var user = await GetCurrentUserAsync();
+        //    ViewData["UserId"] = user.Id;
+        //    ViewData["FollowerId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+
+        //    return View();
+        //}
+
+        public async Task<IActionResult> CreateAsync(string Id)
         {
             var user = await GetCurrentUserAsync();
-            ViewData["UserId"] = user.Id;
-            ViewData["FollowerId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+            var existingFollow = await _context.Follow
+                .FirstOrDefaultAsync(f => f.FollowerId == Id && f.UserId == user.Id);
+            if(existingFollow == null)
+            {
+            var newFollow = new Follow
+            {
+                FollowerId = Id,
+                UserId = user.Id
+            };
+            _context.Add(newFollow);
+            await _context.SaveChangesAsync();
 
-            return View();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Follows/Create
@@ -79,11 +97,11 @@ namespace Capstone.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FollowId,UserId,FollowerId")] Follow follow)
         {
- //Issues with this if valid && user is loggedin user
+            //Issues with this if valid && user is loggedin user
             var user = await GetCurrentUserAsync();
             ModelState.Remove("FollowId");
             ModelState.Remove("UserId");
-            ModelState.Remove("FolllowerId");
+            ModelState.Remove("FollowerId");
 
             if (ModelState.IsValid)
             {
@@ -92,7 +110,7 @@ namespace Capstone.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
+
             ViewData["FollowerId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", follow.FollowerId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", follow.UserId);
             return View(follow);
@@ -161,28 +179,14 @@ namespace Capstone.Controllers
                 return NotFound();
             }
 
-            var follow = await _context.Follow
-                .Include(f => f.Follower)
-                .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.FollowId == id);
-            if (follow == null)
-            {
-                return NotFound();
-            }
-
-            return View(follow);
-        }
-
-        // POST: Follows/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
             var follow = await _context.Follow.FindAsync(id);
             _context.Follow.Remove(follow);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+            
         }
+
+       
 
         private bool FollowExists(int id)
         {

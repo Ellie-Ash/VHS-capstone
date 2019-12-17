@@ -1,0 +1,25 @@
+﻿@model Capstone.Models.ViewModels.AllUsersViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.AllUsers) {
+        <tr>
+            <p>@item.UserName</p>
+        </tr>
+}
+    </tbody>
+</table>

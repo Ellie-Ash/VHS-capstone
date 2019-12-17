@@ -11,17 +11,12 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            @if (User.Identity.IsAuthenticated)
-            {
-            <form class="form-inline my-2 my-lg-0" asp-area="" asp-controller="Follows" asp-action="Search">
-                <input class="form-control mr-sm-2" name="searchString" type="search" placeholder="Search username" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            }
-
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-
+            
+            <div class="form-group">
+                <label asp-for="FollowerId" class="control-label"></label>
+                <select asp-for="FollowerId" class ="form-control" asp-items="ViewBag.FollowerId"></select>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
