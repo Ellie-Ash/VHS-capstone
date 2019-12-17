@@ -1,0 +1,75 @@
+﻿@model Capstone.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Profile";
+}
+<div>
+    <h4> @Html.DisplayFor(model => model.UserName)</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Bio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Bio)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ImagePath)
+        </dd>
+        <dd>
+            @if(Model.Id == ViewBag.UserId)
+            {
+            <a asp-action="Edit" asp-controller="User" asp-route-id="@Model.Id">Edit</a>
+            } else
+            {
+            <a asp-action="Create" asp-controller="Follows" asp-route-id="@Model.Id">Follow</a>
+            }
+        </dd>
+    </dl>
+    <hr/>
+    <h4>Tapes</h4>
+    <hr/>
+</div>
+<div>
+    @foreach (var item in Model.Tapes)
+    {
+
+        <dt>@item.Title</dt>
+        <td>
+            <img style="width:7em; height:11em;" src="~/userImg/@item.ImagePath" />
+        </td>
+        <p>@item.Genre</p>
+        <p>@item.Year</p>
+        
+        @if (item.UserId == @ViewBag.UserId)
+        {
+            <td>
+                <a asp-controller="Tapes" asp-action="Details" asp-route-id="@item.TapeId">Details</a> |
+                <a asp-controller="Tapes" asp-action="Edit" asp-route-id="@item.TapeId">Edit</a> |
+                <a asp-controller="Tapes" asp-action="Delete" asp-route-id="@item.TapeId">Delete</a>
+            </td>
+        }
+        else
+        {
+            <td>
+                <a asp-controller="Tapes" asp-action="Details" asp-route-id="@item.TapeId">Details</a>
+            </td>
+        }
+        <hr/>
+    }
+</div>

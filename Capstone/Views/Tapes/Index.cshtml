@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Capstone.Models.Tape>
+@using Microsoft.AspNetCore.Identity
+@using Capstone.Models;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "All Tapes";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Index" asp-controller="User" asp-route-id="@item.User.Id">
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    </a>
+                </td>
+                <td>
+                   <img style="width:7em; height:11em;" src="~/userImg/@item.ImagePath"/>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                @if (item.UserId == @ViewBag.UserId)
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.TapeId">Details</a> |
+                        <a asp-action="Edit" asp-route-id="@item.TapeId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.TapeId">Delete</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.TapeId">Details</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Capstone.Models.Follow>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Follower)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                <a asp-action="Index" asp-controller="User" asp-route-id="@item.FollowerId">
+                    @Html.DisplayFor(modelItem => item.Follower.UserName)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.FollowId">Unfollow</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
