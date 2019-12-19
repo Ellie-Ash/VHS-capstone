@@ -23,9 +23,9 @@ namespace Capstone.Controllers
           
         }
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var user = await GetCurrentUserAsync();
+            
             var allUsers = await _context.ApplicationUsers.ToListAsync();
 
             var viewModel = new AllUsersViewModel();

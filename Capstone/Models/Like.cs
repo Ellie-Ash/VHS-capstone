@@ -14,5 +14,6 @@ namespace Capstone.Models
         public ApplicationUser User { get; set; }
         public int TapeId { get; set; }
         public Tape Tape { get; set; }
+
     }
 }

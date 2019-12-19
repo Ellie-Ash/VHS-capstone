@@ -75,12 +75,10 @@ namespace Capstone.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTapeViewModel viewModel)
         {
-            
             var user = await GetCurrentUserAsync();
             ModelState.Remove("Tape.User");
             ModelState.Remove("Tape.UserId");
             ModelState.Remove("Tape.TapeId");
-            
 
             var img = viewModel.MyImage;
 
@@ -100,10 +98,11 @@ namespace Capstone.Controllers
                 viewModel.Tape.UserId = user.Id;
                 viewModel.Tape.ImagePath = uniqueFileName;
             }
+            
                 _context.Add(viewModel.Tape);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            } 
 
             return View();
         }
@@ -115,6 +114,7 @@ namespace Capstone.Controllers
                       + Guid.NewGuid().ToString().Substring(0, 4)
                       + Path.GetExtension(fileName);
         }
+
         [Authorize]
         // GET: Tapes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -122,16 +122,21 @@ namespace Capstone.Controllers
             if (id == null)
             {
                 return NotFound();
-    }
+            }
+            var tape = await _context.Tape.FirstOrDefaultAsync(t => t.TapeId == id);
 
-            var tape = await _context.Tape.FindAsync(id);
-            if (tape == null)
+            //var tape = await _context.Tape.FindAsync(id);
+
+            //var user = await GetCurrentUserAsync();
+
+            var viewModel = new CreateTapeViewModel()
             {
-                return NotFound();
-}
+                Tape = tape,
 
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", tape.UserId);
-            return View(tape);
+            };
+
+            //tape.UserId = user.Id;
+            return View(viewModel);
         }
         [Authorize]
         // POST: Tapes/Edit/5
@@ -139,39 +144,71 @@ namespace Capstone.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TapeId,UserId,Title,Description,Genre,Year,ImagePath,Link,isAvailable")] Tape tape)
+        public async Task<IActionResult> Edit(int id, CreateTapeViewModel viewModel)
         {
-            var user = await GetCurrentUserAsync();
-            ModelState.Remove("User");
-            ModelState.Remove("UserId");
-            if (id != tape.TapeId)
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                try
+                var tape = viewModel.Tape;
+                if (id != tape.TapeId)
                 {
-                    tape.UserId = user.Id;
-                    _context.Update(tape);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                ModelState.Remove("Tape.User");
+                if (ModelState.IsValid)
                 {
-                    if (!TapeExists(tape.TapeId))
+                    try
                     {
-                        return NotFound();
+                        var currentFileName = viewModel.Tape.ImagePath;
+                        if (viewModel.MyImage != null && viewModel.MyImage.FileName != currentFileName)
+                        {
+                            if (currentFileName != null)
+                            {
+                                var images = Directory.GetFiles("wwwroot/userImg");
+                                var fileToDelete = images.FirstOrDefault(i => i.Contains(currentFileName));
+                                
+                                if (fileToDelete != null)
+                                {
+
+                                System.IO.File.Delete(fileToDelete);
+                                }
+                            }
+                            var uniqueFileName = GetUniqueFileName(viewModel.MyImage.FileName);
+                            var imageDirectory = Path.Combine(hostingEnvironment.WebRootPath, "userImg");
+                            var filePath = Path.Combine(imageDirectory, uniqueFileName);
+                            using (var myFile = new FileStream(filePath, FileMode.Create))
+                            {
+                                viewModel.MyImage.CopyTo(myFile);
+                            }
+                            viewModel.Tape.ImagePath = uniqueFileName;
+                        }
+                        //if (viewModel.Tape.TapeId != null)
+                        //{
+                        //    var newTape = new Tape()
+                        //    {
+                        //        UserId = viewModel.Tape.UserId,
+                        //        TapeId = viewModel.Tape.TapeId
+                        //    };
+                        //    _context.Add(newTape);
+                        //    await _context.SaveChangesAsync();
+                        //}
+                        _context.Update(tape);
+                        await _context.SaveChangesAsync();
+
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!TapeExists(tape.TapeId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return View(viewModel);
             }
-            
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", tape.UserId);
-            return View(tape);
         }
         [Authorize]
         // GET: Tapes/Delete/5
@@ -184,7 +221,6 @@ namespace Capstone.Controllers
             
             var tape = await _context.Tape
                 .Include(t => t.User)
-                
                 .FirstOrDefaultAsync(m => m.TapeId == id);
             if (tape == null)
             {
@@ -199,17 +235,25 @@ namespace Capstone.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-
+           
             var tape = await _context.Tape.FindAsync(id);
             var fileName = tape.ImagePath;
             var images = Directory.GetFiles("wwwroot/userImg");
-            var fileToDelete = images.First(i => i.Contains(fileName));
-            System.IO.File.Delete(fileToDelete);
+            var fileToDelete = images.FirstOrDefault(i => i.Contains(fileName));
 
-
+            if (fileToDelete == null)
+            {
             _context.Tape.Remove(tape);
+            }
+            if (fileToDelete != null)
+            {
+                System.IO.File.Delete(fileToDelete);
+                _context.Tape.Remove(tape);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
         }
 
         private bool TapeExists(int id)

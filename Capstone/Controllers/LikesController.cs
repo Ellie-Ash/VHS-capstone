@@ -56,11 +56,23 @@ namespace Capstone.Controllers
         }
 
         // GET: Likes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync(string Id)
         {
-            ViewData["TapeId"] = new SelectList(_context.Tape, "TapeId", "Description");
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            return View();
+            var user = await GetCurrentUserAsync();
+            var existingLike = await _context.Like
+                .FirstOrDefaultAsync(l => l.LikeId.ToString() == Id && l.UserId == user.Id);
+            if (existingLike == null)
+            {
+                var newLike = new Like
+                {
+                    //LikeId = Id,
+                    UserId = user.Id
+                };
+                _context.Add(newLike);
+                await _context.SaveChangesAsync();
+
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Likes/Create
@@ -70,14 +82,22 @@ namespace Capstone.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("LikeId,UserId,TapeId")] Like like)
         {
+
+            var user = await GetCurrentUserAsync();
+            ModelState.Remove("LikeId");
+            ModelState.Remove("UserId");
+            ModelState.Remove("TapeId");
+
             if (ModelState.IsValid)
             {
+                like.UserId = user.Id;
                 _context.Add(like);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TapeId"] = new SelectList(_context.Tape, "TapeId", "Description", like.TapeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", like.UserId);
+
+            ViewData["TapeId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", like.TapeId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", like.TapeId);
             return View(like);
         }
 

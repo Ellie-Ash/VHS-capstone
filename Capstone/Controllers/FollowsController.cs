@@ -29,7 +29,7 @@ namespace Capstone.Controllers
             var users = from f in _context.Follow
                            .Include(f => f.Follower)
                            .Include(f => f.User)
-                        select f;
+                           select f;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -97,7 +97,7 @@ namespace Capstone.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FollowId,UserId,FollowerId")] Follow follow)
         {
-            //Issues with this if valid && user is loggedin user
+            
             var user = await GetCurrentUserAsync();
             ModelState.Remove("FollowId");
             ModelState.Remove("UserId");

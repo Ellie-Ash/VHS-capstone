@@ -1,5 +1,4 @@
-﻿@model Capstone.Models.Tape
-
+﻿@model Capstone.Models.ViewModels.CreateTapeViewModel
 @{
     ViewData["Title"] = "Edit";
 }
@@ -10,47 +9,54 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form enctype="multipart/form-data" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="TapeId" />
-            
+            <input type="hidden" asp-for="Tape.TapeId" />
+            <input type="hidden" asp-for="Tape.UserId" />
+            <input type="hidden" asp-for="Tape.ImagePath" />
+
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Tape.Title" class="control-label"></label>
+                <input asp-for="Tape.Title" class="form-control" />
+                <span asp-validation-for="Tape.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Tape.Description" class="control-label"></label>
+                <input asp-for="Tape.Description" class="form-control" />
+                <span asp-validation-for="Tape.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Genre" class="control-label"></label>
-                <input asp-for="Genre" class="form-control" />
-                <span asp-validation-for="Genre" class="text-danger"></span>
+                <label asp-for="Tape.Genre" class="control-label"></label>
+                <input asp-for="Tape.Genre" class="form-control" />
+                <span asp-validation-for="Tape.Genre" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
+                <label asp-for="Tape.Year" class="control-label"></label>
+                <input asp-for="Tape.Year" class="form-control" />
+                <span asp-validation-for="Tape.Year" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-                <span asp-validation-for="ImagePath" class="text-danger"></span>
+                <label asp-for="MyImage" class="control-label"></label>
+                <input type="file" asp-for="MyImage" class="form-control" />
+                <span asp-validation-for="MyImage" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Link" class="control-label"></label>
-                <input asp-for="Link" class="form-control" />
-                <span asp-validation-for="Link" class="text-danger"></span>
+                <label asp-for="Tape.Link" class="control-label"></label>
+                <input asp-for="Tape.Link" class="form-control" />
+                <span asp-validation-for="Tape.Link" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+                @Html.HiddenFor(m => m.Tape.ImagePath)
+                @Html.HiddenFor(m => m.Tape.TapeId)
+                @Html.HiddenFor(m => m.Tape.UserId)
+            </div>*@
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="isAvailable" /> @Html.DisplayNameFor(model => model.isAvailable)
+                    <input class="form-check-input" asp-for="Tape.isAvailable" /> @Html.DisplayNameFor(model => model.Tape.isAvailable)
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" asp-page-handler="Upload" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
