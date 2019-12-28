@@ -61,8 +61,10 @@ namespace Capstone.Controllers
         }
         [Authorize]
         // GET: Tapes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            var user = await GetCurrentUserAsync();
+            ViewBag.UserId = user.Id;
             var viewModel = new CreateTapeViewModel();
             return View(viewModel);
         }
@@ -75,7 +77,9 @@ namespace Capstone.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTapeViewModel viewModel)
         {
+            
             var user = await GetCurrentUserAsync();
+            
             ModelState.Remove("Tape.User");
             ModelState.Remove("Tape.UserId");
             ModelState.Remove("Tape.TapeId");
@@ -132,7 +136,6 @@ namespace Capstone.Controllers
             var viewModel = new CreateTapeViewModel()
             {
                 Tape = tape,
-
             };
 
             //tape.UserId = user.Id;

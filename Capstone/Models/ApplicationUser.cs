@@ -22,7 +22,7 @@ namespace Capstone.Models
         [Display(Name = "Bio")]
         public string Bio { get; set; }
 
-        [Required]
+        
         [Display(Name = "Image")]
         public string ImagePath { get; set; }
 

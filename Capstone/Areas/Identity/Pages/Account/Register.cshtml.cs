@@ -65,7 +65,7 @@ namespace Capstone.Areas.Identity.Pages.Account
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
 
-            [Required]
+            
 
             [Display(Name = "Image")]
             public string ImagePath { get; set; }
@@ -97,13 +97,14 @@ namespace Capstone.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ModelState.Remove("ImagePath");
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser {
                     Bio = Input.Bio,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    ImagePath = Input.ImagePath,
+                    ImagePath = "~/userImg/avatar.png",
                     UserName = Input.UserName, 
                     Email = Input.Email 
                 };

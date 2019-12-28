@@ -27,9 +27,10 @@ namespace Capstone.Controllers
             _context = ctx;
             _logger = logger;
         }
-
-        public IActionResult IndexAsync()
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+        public async Task<IActionResult> IndexAsync()
         {
+            var user = await GetCurrentUserAsync();
             
             return View();
         }

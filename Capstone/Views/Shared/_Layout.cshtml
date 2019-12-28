@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Capstone</title>
+    <title>@ViewData["Title"] - Tape Ape</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Capstone</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Tape Ape</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,11 +19,11 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
+                        @if (User.Identity.IsAuthenticated)
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Tapes" asp-action="Index">All Tapes</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="User" asp-action="Index" asp-route-id="@ViewBag.UserId">My Profile</a>
                             </li>
@@ -33,12 +33,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Follows" asp-action="Index">Following</a>
                             </li>
-                            <li class="nav-item">
+                            @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Find Friends</a>
-                            </li>
-                            <li class="nav-item">
+                            </li>*@
+                            @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Likes" asp-action="Index">Likes</a>
-                            </li>
+                            </li>*@
                         }
 
                     </ul>

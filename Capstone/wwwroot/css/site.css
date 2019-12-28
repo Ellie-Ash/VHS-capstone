@@ -59,8 +59,16 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    margin: 0;
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    font-weight: 100;
+    line-height: 1.5;
+    color: white;
+    text-align: left;
+    background-color: black;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
 .footer {
   position: absolute;
