@@ -14444,6 +14444,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "c:\\Users\\Ellie\\source\\repos\\Capstone\\Capstone\\Views\\Search\\Index.cshtml",
+      "TargetPath": "Views\\Search\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "c:\\Users\\Ellie\\source\\repos\\Capstone\\Capstone\\Areas\\Identity\\Pages\\Account\\Register.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\Account\\Register.cshtml",
       "FileKind": "mvc"
