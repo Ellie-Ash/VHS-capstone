@@ -22,13 +22,13 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tapes" asp-action="Index">All Tapes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tapes" asp-action="Index">Community</a>
                         </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="User" asp-action="Index" asp-route-id="@ViewBag.UserId">My Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Tapes" asp-action="Create">New Tape</a>
+                                <a class="nav-link text-dark" asp-controller="Tapes" asp-action="Create">Post</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Follows" asp-action="Index">Following</a>
@@ -53,9 +53,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - Capstone - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
